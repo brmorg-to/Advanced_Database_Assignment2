@@ -199,11 +199,6 @@ by changing donor ID 305. (Don’t include a COMMIT statement; roll back any DML
 DECLARE
     ex_duplicate_id EXCEPTION;
     PRAGMA exception_init(ex_duplicate_id, -20001);
-    
-    TYPE type_id IS RECORD (donor_id dd_donor.iddonor%TYPE);
-    TYPE t_id_type IS TABLE OF type_id;
-    id type_id;
-    t_id t_id_type := t_id_type();
     lv_donor_id dd_donor.iddonor%TYPE := 305;
     lv_new_id dd_donor.iddonor%TYPE := 301;
     lv_exist NUMBER;
