@@ -78,8 +78,6 @@ BEGIN
 END;
 
 
-
-
 /*
 Assignment 4-11: Adding Cursor Flexibility
 An administration page in the DoGood Donor application allows employees to enter multiple
@@ -125,8 +123,6 @@ BEGIN
         END LOOP;
     END LOOP;
 END;
-
-
 
 
 /*
@@ -191,16 +187,48 @@ BEGIN
 END;
 
 
+/*
+Assignment 4-13: Exception Handling
+The DoGood Donor application contains a page that allows administrators to change the ID
+assigned to a donor in the DD_DONOR table. Create a PL/SQL block to handle this task.
+Include exception-handling code to address an error raised by attempting to enter a duplicate
+donor ID. If this error occurs, display the message “This ID is already assigned.” Test the code
+by changing donor ID 305. (Don’t include a COMMIT statement; roll back any DML actions used.)
+*/
 
------------------------------------------------------------
+DECLARE
+    ex_duplicate_id EXCEPTION;
+    PRAGMA exception_init(ex_duplicate_id, -20001);
+    
+    TYPE type_id IS RECORD (donor_id dd_donor.iddonor%TYPE);
+    TYPE t_id_type IS TABLE OF type_id;
+    id type_id;
+    t_id t_id_type := t_id_type();
+    lv_donor_id dd_donor.iddonor%TYPE := 305;
+    lv_new_id dd_donor.iddonor%TYPE := 301;
+    lv_exist NUMBER;
+BEGIN
+    UPDATE dd_donor 
+        SET iddonor = lv_new_id
+        WHERE iddonor = lv_donor_id;
+    
+    SELECT COUNT(*)
+        INTO lv_exist
+        FROM dd_donor
+    WHERE iddonor = lv_new_id;
 
-SELECT iddonor, firstname, lastname, idpledge, SUM(payamt)
-FROM dd_donor
-JOIN dd_pledge USING(iddonor)
-JOIN dd_payment USING(idpledge)
-GROUP BY iddonor, firstname, lastname, idpledge, payamt
-HAVING iddonor = 302;
+    IF lv_exist = 1 THEN
+        RAISE ex_duplicate_id;
+    END IF;
 
-SELECT * FROM dd_donor;
-SELECT * FROM dd_pledge;
-SELECT * FROM dd_payment;
+    EXCEPTION
+        WHEN ex_duplicate_id THEN
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('* This ID is already assigned. *');
+        WHEN DUP_VAL_ON_INDEX THEN
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('* This ID is already assigned. Please choose a different ID. *');
+        WHEN OTHERS THEN
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('* Please verify the imput information. A problem has occurred. *');
+END;
