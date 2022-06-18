@@ -222,7 +222,7 @@ BEGIN
             DBMS_OUTPUT.PUT_LINE('* This ID is already assigned. *');
         WHEN DUP_VAL_ON_INDEX THEN
             ROLLBACK;
-            DBMS_OUTPUT.PUT_LINE('* This ID is already assigned. Please choose a different ID. *');
+            DBMS_OUTPUT.PUT_LINE('DUP_VAL_ON_INDEX: '||sqlerrm);
         WHEN OTHERS THEN
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('* Please verify the imput information. A problem has occurred. *');
