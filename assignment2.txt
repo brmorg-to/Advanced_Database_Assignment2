@@ -28,7 +28,7 @@ BEGIN
         lv_curr_pledge := cur_pledge.idpledge;
     END LOOP;
 END;
-
+/
 
 /*
 Assignment 4-10: Using a Different Form of Explicit Cursors
@@ -76,7 +76,7 @@ BEGIN
         END LOOP;
     CLOSE pledged_payment;
 END;
-
+/
 
 /*
 Assignment 4-11: Adding Cursor Flexibility
@@ -123,7 +123,7 @@ BEGIN
         END LOOP;
     END LOOP;
 END;
-
+/
 
 /*
 Assignment 4-12: Using a Cursor Variable
@@ -185,7 +185,7 @@ BEGIN
         END LOOP;
     END IF;
 END;
-
+/
 
 /*
 Assignment 4-13: Exception Handling
@@ -222,8 +222,9 @@ BEGIN
             DBMS_OUTPUT.PUT_LINE('* This ID is already assigned. *');
         WHEN DUP_VAL_ON_INDEX THEN
             ROLLBACK;
-            DBMS_OUTPUT.PUT_LINE('Duplicate Value on Index: 'Please select a different ID');
+            DBMS_OUTPUT.PUT_LINE('Duplicate Value on Index: '||sqlerrm);
         WHEN OTHERS THEN
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('* Please verify the imput information. A problem has occurred. *');
 END;
+/

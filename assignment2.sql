@@ -7,7 +7,7 @@ output row.*/
 
 DECLARE
     CURSOR pledged_payment (donor_id dd_donor.iddonor%TYPE) IS
-        SELECT (don.firstname || ' ' || don.lastname) donor, pld.idpledge, pld.pledgeamt, pld.paymonths, pay.paydate
+        SELECT (don.firstname || ' ' || don.lastname) donor, pld.idpledge, pld.pledgeamt, pld.paymonths, pay.payamt, pay.paydate
             FROM dd_donor don 
             JOIN dd_pledge pld ON pld.iddonor = don.iddonor
             JOIN dd_payment pay ON pld.idpledge = pay.idpledge
@@ -23,12 +23,13 @@ BEGIN
         END IF;
         DBMS_OUTPUT.PUT_LINE('Donor: ' || cur_pledge.donor);
         DBMS_OUTPUT.PUT_LINE('Pledge ID: ' || cur_pledge.idpledge);
-        DBMS_OUTPUT.PUT_LINE( 'Amount: ' || cur_pledge.pledgeamt || ' --- ' || ' Payment Months: ' || cur_pledge.paymonths || ' --- ' || ' Pay Date: ' || cur_pledge.paydate);
+        DBMS_OUTPUT.PUT_LINE( 'Pledged Amount: ' || cur_pledge.pledgeamt || ' --- ' || ' Payment Months: ' || cur_pledge.paymonths);
+        DBMS_OUTPUT.PUT_LINE( 'Payment Ammount: ' || cur_pledge.payamt || ' --- ' || ' Pay Date: ' || cur_pledge.paydate);
         DBMS_OUTPUT.PUT_LINE('-------------------------------------------------------------------------------');
         lv_curr_pledge := cur_pledge.idpledge;
     END LOOP;
 END;
-
+/
 
 /*
 Assignment 4-10: Using a Different Form of Explicit Cursors
@@ -76,7 +77,7 @@ BEGIN
         END LOOP;
     CLOSE pledged_payment;
 END;
-
+/
 
 /*
 Assignment 4-11: Adding Cursor Flexibility
@@ -123,7 +124,7 @@ BEGIN
         END LOOP;
     END LOOP;
 END;
-
+/
 
 /*
 Assignment 4-12: Using a Cursor Variable
@@ -185,7 +186,7 @@ BEGIN
         END LOOP;
     END IF;
 END;
-
+/
 
 /*
 Assignment 4-13: Exception Handling
@@ -222,8 +223,9 @@ BEGIN
             DBMS_OUTPUT.PUT_LINE('* This ID is already assigned. *');
         WHEN DUP_VAL_ON_INDEX THEN
             ROLLBACK;
-            DBMS_OUTPUT.PUT_LINE('DUP_VAL_ON_INDEX: '||sqlerrm);
+            DBMS_OUTPUT.PUT_LINE('Duplicate Value on Index: '||sqlerrm);
         WHEN OTHERS THEN
             ROLLBACK;
             DBMS_OUTPUT.PUT_LINE('* Please verify the imput information. A problem has occurred. *');
 END;
+/
